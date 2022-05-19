@@ -1178,7 +1178,7 @@ function library.new(theme)
 							local opt = table.find(ChosenOptions, CurrentOption)
 							if opt then
 								Option.TextColor3 = theme['TextColor']
-								table.remove(ChosenOptions, CurrentOption)
+								table.remove(ChosenOptions, opt)
 							else
 								Option.TextColor3 = theme['SelectedTextColor']
 								table.insert(ChosenOptions, CurrentOption)
