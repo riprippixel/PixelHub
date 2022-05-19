@@ -1171,15 +1171,18 @@ function library.new(theme)
 						Option.TextSize = TextSize
 
 						Option.MouseButton1Click:Connect(function()
+							local CurrentOption = Option.Text
 							DropdownBox.Text = ""
 							DropdownBox.PlaceholderText = DropdownTitle
-							for _,b in pairs(DropdownContainer:GetChildren()) do
-								if b:IsA('TextButton') then
-									b.TextColor3 = theme['TextColor']
-								end
+							if not exists() then return end
+							local opt = table.find(ChosenOptions, CurrentOption)
+							if opt then
+								v.TextColor3 = theme['TextColor']
+								table.remove(ChosenOptions, CurrentOption)
+							else
+								v.TextColor3 = theme['SelectedTextColor']
+								table.insert(ChosenOptions, CurrentOption)
 							end
-							Option.TextColor3 = theme['SelectedTextColor']
-							if not exists() or not Option then return end
 							callback(ChosenOptions)
 							--DropTween(false)
 						end)
@@ -1226,27 +1229,6 @@ function library.new(theme)
 					DropTween(true)
 					ResizeCanvas()
 				end)
-
-				for _,v in pairs(DropdownContainer:GetChildren()) do
-					if v:IsA('TextButton') then
-						v.MouseButton1Click:Connect(function()
-							local CurrentOption = v.Text
-							DropdownBox.Text = ""
-							DropdownBox.PlaceholderText = DropdownTitle
-							if not exists() then return end
-							local opt = table.find(ChosenOptions, CurrentOption)
-							if opt then
-								v.TextColor3 = theme['TextColor']
-								table.remove(ChosenOptions, CurrentOption)
-							else
-								v.TextColor3 = theme['SelectedTextColor']
-								table.insert(ChosenOptions, CurrentOption)
-							end
-							callback(ChosenOptions)
-							--DropTween(false)
-						end)
-					end
-				end
 
 				DropdownContainer:GetPropertyChangedSignal('AbsoluteCanvasSize'):Connect(ResizeCanvas)
 
