@@ -939,6 +939,7 @@ function library.new(theme)
 
 				local function UpdateOptions(options)
 					DropdownBox.Text = ""
+					DropTween(false)
 					DropdownBox.PlaceholderText = DropdownTitle
 					for _,v in pairs(DropdownContainer:GetChildren()) do
 						if v:IsA('TextButton') then
