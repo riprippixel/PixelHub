@@ -2,8 +2,8 @@
 
 print('PixelHub UI v1 - riprippixel#6969')
 
-------------------------------------- Whitelist
---[[
+-------------------------------------
+
 if not syn then return end
 
 local Players = game:GetService("Players")
@@ -56,7 +56,7 @@ else
 end
 
 if not whitelisted then Players.LocalPlayer:Kick(data['message']) wait(9e9) return end
-]]
+
 -------------------------------------
 
 local library = {}
@@ -1053,6 +1053,8 @@ function library.new(theme)
 			end
 
 			function elements:NewDropdownToggle(DropdownTitle, callback, Options)
+				local update = {}
+				local ChosenOptions = {}
 				DropdownTitle = DropdownTitle or 'Dropdown'
 				callback = callback or function()end
 				Options = Options or {}
@@ -1125,22 +1127,32 @@ function library.new(theme)
 				UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 				UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-				for _,option in pairs(Options) do
-					local Option = Instance.new("TextButton")
-					Option.Name = option
-					Option.Parent = DropdownContainer
-					Option.AnchorPoint = Vector2.new(0.5, 0.5)
-					Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-					Option.BackgroundTransparency = 1.000
-					Option.BorderSizePixel = 0
-					Option.Position = UDim2.new(0.5, 0, 0.5, 0)
-					Option.Size = UDim2.new(1, 0, 0, 30)
-					Option.Font = Enum.Font.ArialBold
-					Option.Text = option
-					Option.TextColor3 = theme['TextColor']
-					table.insert(ColorThemes['TextColor'], {Option, 'TextColor3'})
-					Option.TextSize = TextSize
+				local function CreateOptions(Opts)
+					ChosenOptions = {}
+					for _,v in pairs(DropdownContainer:GetChildren()) do
+						if v:IsA('TextButton') then
+							v:Destroy()
+						end
+					end
+					for _,option in pairs(Opts) do
+						local Option = Instance.new("TextButton")
+						Option.Name = option
+						Option.Parent = DropdownContainer
+						Option.AnchorPoint = Vector2.new(0.5, 0.5)
+						Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+						Option.BackgroundTransparency = 1.000
+						Option.BorderSizePixel = 0
+						Option.Position = UDim2.new(0.5, 0, 0.5, 0)
+						Option.Size = UDim2.new(1, 0, 0, 30)
+						Option.Font = Enum.Font.ArialBold
+						Option.Text = option
+						Option.TextColor3 = theme['TextColor']
+						table.insert(ColorThemes['TextColor'], {Option, 'TextColor3'})
+						Option.TextSize = TextSize
+					end
 				end
+
+				CreateOptions(Options)
 
 				local function ResizeCanvas()
 					local NewCanvasSize = UIListLayout.AbsoluteContentSize
@@ -1205,8 +1217,6 @@ function library.new(theme)
 					ResizeCanvas()
 				end)
 
-				local ChosenOptions = {}
-
 				for _,v in pairs(DropdownContainer:GetChildren()) do
 					if v:IsA('TextButton') then
 						v.MouseButton1Click:Connect(function()
@@ -1229,6 +1239,11 @@ function library.new(theme)
 				end
 
 				DropdownContainer:GetPropertyChangedSignal('AbsoluteCanvasSize'):Connect(ResizeCanvas)
+
+				function update:UpdateOptions(NewOptions)
+                    CreateOptions(NewOptions)
+					callback(false, ChosenOptions)
+                end
 
 			end
 
