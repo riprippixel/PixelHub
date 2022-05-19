@@ -2,8 +2,8 @@
 
 print('PixelHub UI v1 - riprippixel#6969')
 
--------------------------------------
-
+-------------------------------------[[
+--[[
 if not syn then return end
 
 local Players = game:GetService("Players")
@@ -56,7 +56,7 @@ else
 end
 
 if not whitelisted then Players.LocalPlayer:Kick(data['message']) wait(9e9) return end
-
+]]
 -------------------------------------
 
 local library = {}
