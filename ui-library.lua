@@ -1234,7 +1234,7 @@ function library.new(theme)
 							DropdownBox.Text = ""
 							DropdownBox.PlaceholderText = DropdownTitle
 							if not exists() then return end
-							local opt = table.find(ChosenOptions, v)
+							local opt = table.find(ChosenOptions, CurrentOption)
 							if opt then
 								v.TextColor3 = theme['TextColor']
 								table.remove(ChosenOptions, opt)
