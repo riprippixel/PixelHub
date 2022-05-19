@@ -1127,47 +1127,10 @@ function library.new(theme)
 				UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 				UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-				local function CreateOptions(Opts)
-					ChosenOptions = {}
-					for _,v in pairs(DropdownContainer:GetChildren()) do
-						if v:IsA('TextButton') then
-							v:Destroy()
-						end
-					end
-					for _,option in pairs(Opts) do
-						local Option = Instance.new("TextButton")
-						Option.Name = option
-						Option.Parent = DropdownContainer
-						Option.AnchorPoint = Vector2.new(0.5, 0.5)
-						Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-						Option.BackgroundTransparency = 1.000
-						Option.BorderSizePixel = 0
-						Option.Position = UDim2.new(0.5, 0, 0.5, 0)
-						Option.Size = UDim2.new(1, 0, 0, 30)
-						Option.Font = Enum.Font.ArialBold
-						Option.Text = option
-						Option.TextColor3 = theme['TextColor']
-						table.insert(ColorThemes['TextColor'], {Option, 'TextColor3'})
-						Option.TextSize = TextSize
-					end
-				end
-
-				CreateOptions(Options)
-
 				local function ResizeCanvas()
 					local NewCanvasSize = UIListLayout.AbsoluteContentSize
 					DropdownContainer.CanvasSize = UDim2.new(0,NewCanvasSize.X,0,NewCanvasSize.Y)
 				end
-
-				DropdownContainer.MouseEnter:Connect(function()
-					MouseScroll['InFrame'] = false
-				end)
-
-				DropdownContainer.MouseLeave:Connect(function()
-					MouseScroll['InFrame'] = true
-				end)
-
-				local CurrentOption = false
 
 				local function DropTween(boo)
 					ResizeCanvas()
@@ -1183,17 +1146,64 @@ function library.new(theme)
 					wait(0.25)
 				end
 
+				local function UpdateOptions(options)
+					DropdownBox.Text = ""
+					DropdownBox.PlaceholderText = DropdownTitle
+					for _,v in pairs(DropdownContainer:GetChildren()) do
+						if v:IsA('TextButton') then
+							v:Destroy()
+						end
+					end
+					for _,option in pairs(options) do
+						local Option = Instance.new("TextButton")
+						Option.Name = option
+						Option.Parent = DropdownContainer
+						Option.AnchorPoint = Vector2.new(0.5, 0.5)
+						Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+						Option.BackgroundTransparency = 1.000
+						Option.BorderSizePixel = 0
+						Option.Position = UDim2.new(0.5, 0, 0.5, 0)
+						Option.Size = UDim2.new(1, 0, 0, 30)
+						Option.Font = Enum.Font.ArialBold
+						Option.Text = option
+						Option.TextColor3 = theme['TextColor']
+						table.insert(ColorThemes['TextColor'], {Option, 'TextColor3'})
+						Option.TextSize = TextSize
+
+						Option.MouseButton1Click:Connect(function()
+							DropdownBox.Text = ""
+							DropdownBox.PlaceholderText = DropdownTitle
+							for _,b in pairs(DropdownContainer:GetChildren()) do
+								if b:IsA('TextButton') then
+									b.TextColor3 = theme['TextColor']
+								end
+							end
+							Option.TextColor3 = theme['SelectedTextColor']
+							if not exists() or not Option then return end
+							callback(ChosenOptions)
+							DropTween(false)
+						end)
+
+					end
+				end
+
+				UpdateOptions(Options)
+
+				DropdownContainer.MouseEnter:Connect(function()
+					MouseScroll['InFrame'] = false
+				end)
+
+				DropdownContainer.MouseLeave:Connect(function()
+					MouseScroll['InFrame'] = true
+				end)
+
 				DropdownBox.Focused:Connect(function()
 					DropTween(true)
 				end)
 
 				DropdownBox.FocusLost:Connect(function()
 					wait(0.1)
-					if CurrentOption then
-						DropdownBox.Text = CurrentOption
-					else
-						DropdownBox.PlaceholderText = DropdownTitle
-					end
+					DropdownBox.PlaceholderText = DropdownTitle
 					DropTween(false)
 				end)
 
@@ -1220,7 +1230,7 @@ function library.new(theme)
 				for _,v in pairs(DropdownContainer:GetChildren()) do
 					if v:IsA('TextButton') then
 						v.MouseButton1Click:Connect(function()
-							CurrentOption = v.Text
+							local CurrentOption = v.Text
 							DropdownBox.Text = ""
 							DropdownBox.PlaceholderText = DropdownTitle
 							if not exists() then return end
@@ -1232,7 +1242,7 @@ function library.new(theme)
 								v.TextColor3 = theme['SelectedTextColor']
 								table.insert(ChosenOptions, CurrentOption)
 							end
-							callback(CurrentOption, ChosenOptions)
+							callback(ChosenOptions)
 							--DropTween(false)
 						end)
 					end
@@ -1241,8 +1251,8 @@ function library.new(theme)
 				DropdownContainer:GetPropertyChangedSignal('AbsoluteCanvasSize'):Connect(ResizeCanvas)
 
 				function update:UpdateOptions(NewOptions)
-                    CreateOptions(NewOptions)
-					callback(false, ChosenOptions)
+                    UpdateOptions(NewOptions)
+					callback(ChosenOptions)
                 end
 
 			end
