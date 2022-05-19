@@ -1147,7 +1147,7 @@ function library.new(theme)
 				end
 
 				local function UpdateOptions(options)
-					local CurrentOption = {}
+					ChosenOptions = {}
 					DropdownBox.Text = ""
 					DropdownBox.PlaceholderText = DropdownTitle
 					for _,v in pairs(DropdownContainer:GetChildren()) do
@@ -1234,8 +1234,8 @@ function library.new(theme)
 				DropdownContainer:GetPropertyChangedSignal('AbsoluteCanvasSize'):Connect(ResizeCanvas)
 
 				function update:UpdateOptions(NewOptions)
-					print('update options')
                     UpdateOptions(NewOptions)
+					callback(ChosenOptions)
                 end
 				return update
 
