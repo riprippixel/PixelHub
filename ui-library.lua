@@ -1181,7 +1181,7 @@ function library.new(theme)
 							Option.TextColor3 = theme['SelectedTextColor']
 							if not exists() or not Option then return end
 							callback(ChosenOptions)
-							DropTween(false)
+							--DropTween(false)
 						end)
 
 					end
