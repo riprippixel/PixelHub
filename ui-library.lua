@@ -1233,9 +1233,11 @@ function library.new(theme)
 				DropdownContainer:GetPropertyChangedSignal('AbsoluteCanvasSize'):Connect(ResizeCanvas)
 
 				function update:UpdateOptions(NewOptions)
+					print('update options')
                     UpdateOptions(NewOptions)
 					callback(ChosenOptions)
                 end
+				return update
 
 			end
 
