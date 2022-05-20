@@ -1024,29 +1024,6 @@ function library.new(theme)
 					ResizeCanvas()
 				end)
 
-				for _,v in pairs(DropdownContainer:GetChildren()) do
-					if v:IsA('TextButton') then
-						v.MouseButton1Click:Connect(function()
-							CurrentOption = v
-							if ResetText then
-								DropdownBox.Text = ""
-								DropdownBox.PlaceholderText = DropdownTitle
-								for _,b in pairs(DropdownContainer:GetChildren()) do
-									if b:IsA('TextButton') then
-										b.TextColor3 = theme['TextColor']
-									end
-								end
-								v.TextColor3 = theme['SelectedTextColor']
-							else
-								DropdownBox.Text = v.Text
-							end
-							if not exists() then return end
-							callback(CurrentOption)
-							DropTween(false)
-						end)
-					end
-				end
-
 				DropdownContainer:GetPropertyChangedSignal('AbsoluteCanvasSize'):Connect(ResizeCanvas)
 
 				local update = {}
