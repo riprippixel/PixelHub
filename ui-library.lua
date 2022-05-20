@@ -444,7 +444,7 @@ function library.new(theme)
 				KeybindBox.Text = ""
 				KeybindBox.TextColor3 = theme['TextColor']
 				table.insert(ColorThemes['TextColor'], {KeybindBox, 'TextColor3'})
-				KeybindBox.TextScaled = false
+				KeybindBox.TextScaled = true
 				KeybindBox.TextSize = TextSize
 				KeybindBox.TextWrapped = false
 
