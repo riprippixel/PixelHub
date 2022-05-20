@@ -839,6 +839,7 @@ function library.new(theme)
 			end
 
 			function elements:NewDropdown(DropdownTitle, callback, Options, ResetText)
+				local DropdownSize = 4
 				ResetText = ResetText or false
 				DropdownTitle = DropdownTitle or 'Dropdown'
 				callback = callback or function()end
@@ -931,7 +932,7 @@ function library.new(theme)
 				local function DropTween(boo)
 					ResizeCanvas()
 					local NewCanvasSize = UIListLayout.AbsoluteContentSize
-					local dropsize = NewCanvasSize.Y >= 90 and 90 or NewCanvasSize.Y
+					local dropsize = NewCanvasSize.Y >= 90 and DropdownSize * 30 or NewCanvasSize.Y
 					local arrowshow = boo and -90 or 0
 					local dropshowval = boo and dropsize or 0
 					local tweeninfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
@@ -1036,6 +1037,7 @@ function library.new(theme)
 			end
 
 			function elements:NewDropdownToggle(DropdownTitle, callback, Options)
+				local DropdownSize = 4
 				local update = {}
 				local ChosenOptions = {}
 				DropdownTitle = DropdownTitle or 'Dropdown'
@@ -1118,7 +1120,7 @@ function library.new(theme)
 				local function DropTween(boo)
 					ResizeCanvas()
 					local NewCanvasSize = UIListLayout.AbsoluteContentSize
-					local dropsize = NewCanvasSize.Y >= 90 and 90 or NewCanvasSize.Y
+					local dropsize = NewCanvasSize.Y >= 90 and DropdownSize * 30 or NewCanvasSize.Y
 					local arrowshow = boo and -90 or 0
 					local dropshowval = boo and dropsize or 0
 					local tweeninfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
