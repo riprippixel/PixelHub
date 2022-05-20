@@ -182,7 +182,7 @@ function library.new(theme)
 	end
 
 	function pages:Delete()
-		PixelHub:Destroy()
+		game:WaitForChild('CoreGui')[HubName]:Destroy()
 	end
 
     function pages:DeletePage(page)
