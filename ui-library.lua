@@ -968,7 +968,7 @@ function library.new(theme)
 						Option.TextSize = TextSize
 
 						Option.MouseButton1Click:Connect(function()
-							CurrentOption = Option
+							CurrentOption = Option.Text
 							if ResetText then
 								DropdownBox.Text = ""
 								DropdownBox.PlaceholderText = DropdownTitle
