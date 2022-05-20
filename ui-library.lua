@@ -1237,7 +1237,6 @@ function library.new(theme)
 
 				function update:UpdateOptions(NewOptions)
                     UpdateOptions(NewOptions)
-					callback(ChosenOptions)
                 end
 				return update
 
