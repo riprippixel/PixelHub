@@ -374,6 +374,7 @@ function library.new(theme)
 				Label.Text = LabelTitle
 				Label.TextSize = TextSize
 				Label.TextWrapped = true
+				Label.TextScaled = true
 
 				LabelPadding.Name = "LabelPadding"
 				LabelPadding.Parent = Label
