@@ -181,6 +181,10 @@ function library.new(theme)
 		toggling = false
 	end
 
+	function pages:Delete()
+		PixelHub:Destroy()
+	end
+
     function pages:DeletePage(page)
         page:Destroy()
     end
