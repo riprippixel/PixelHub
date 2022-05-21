@@ -1,13 +1,15 @@
 -- PixelHub UI v1
 
 print('PixelHub UI v1 - riprippixel#6969')
+------------------------------------------
 
--------------------------------------[[
---[[
+
 if not syn then return end
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
+
+local KickPlayer = function(reason) Players.LocalPlayer:Kick(reason) wait(9e9) return end
 
 local function ToJson(json, tojson)
     if tojson then return HttpService:JSONEncode(json) else return HttpService:JSONDecode(json) end
@@ -28,25 +30,24 @@ end
 local function IntegrityCheck()
     local Check1 = eq(syn.crypt.custom.encrypt("aes-gcm", "riprippixel", "$nLliCMdi7gcynsFCK9u0aVNdtkNIiZG", "Agd13KuKIL2$"), '7WmiFMIr13YThMgdOl2ABZGjs1nNcuAdeV9s')
     local Check2 = eq(syn.crypt.custom.decrypt("aes-gcm", "7WmiFMIr13YThMgdOl2ABZGjs1nNcuAdeV9s", "$nLliCMdi7gcynsFCK9u0aVNdtkNIiZG", "Agd13KuKIL2$"), 'riprippixel')
-    return eq(Check1, Check2)
+    return not eq(eq(Check1, Check2), false)
 end
-
-if  not IntegrityCheck() then
-    Players.LocalPlayer:Kick('Cracking detected!')
-end
-
 
 local uuid = HttpService:GenerateGUID(false)
 local ToSend = Encrypt(ToJson({
     ['key'] = PixelsKey or '',
     ['uuid'] = uuid
 }, true), true)
-local req = sreq('https://script.riprippixel.xyz/whitelist', 'POST', ToSend)
-local data = ToJson(Encrypt(req['Body'], false), false)
+local req = sreq('https://riprippixel.xyz/whitelist', 'POST', ToSend)
+local datares, data = pcall(function() return ToJson(Encrypt(req['Body'], false), false) end)
+
+if not IntegrityCheck() or not datares then
+    KickPlayer('no no no')
+end
+
 local returnuuid = req['Cookies']['UUID']
 if data['blacklisted'] then
-    Players.LocalPlayer:Kick(data['blacklisted'])
-    return
+    KickPlayer(data['blacklisted'])
 end
 local whitelisted
 if data['success'] == eq(data['uuid'], uuid) == eq(returnuuid, uuid) == eq(req['StatusMessage'], 'OK') == eq(req['Success'], true) == eq(req['StatusCode'], 200) then
@@ -55,9 +56,12 @@ else
 	whitelisted = false
 end
 
-if not whitelisted then Players.LocalPlayer:Kick(data['message']) wait(9e9) return end
-]]
--------------------------------------
+print('Whitelisted:', whitelisted)
+
+if not whitelisted then KickPlayer(data['message'])end
+
+
+------------------------------------------
 
 local library = {}
 
