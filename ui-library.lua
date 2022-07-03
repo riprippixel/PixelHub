@@ -1,72 +1,9 @@
--- PixelHub UI v1
-
-print('PixelHub UI v1 - riprippixel#6969')
-------------------------------------------
-
-
-if not syn then return end
-
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-
-local KickPlayer = function(reason) Players.LocalPlayer:Kick(reason) wait(9e9) return end
-
-local function ToJson(json, tojson)
-    if tojson then return HttpService:JSONEncode(json) else return HttpService:JSONDecode(json) end
-end
-
-local function eq(arg1, arg2)
-    return (arg1 == arg2)
-end
-
-local function sreq(url, method, json)
-    return syn.request({Url=url, Method=method, Body=json})
-end
-
-local function Encrypt(arg, enc)
-    if enc then return syn.crypt.custom.encrypt("aes-ctr", arg, "$riprippixels_secret_password!!!", "3477433434774334") else return syn.crypt.custom.decrypt("aes-ctr", arg, "$riprippixels_secret_password!!!", "3477433434774334") end
-end
-
-local function IntegrityCheck()
-    local Check1 = eq(syn.crypt.custom.encrypt("aes-gcm", "riprippixel", "$nLliCMdi7gcynsFCK9u0aVNdtkNIiZG", "Agd13KuKIL2$"), '7WmiFMIr13YThMgdOl2ABZGjs1nNcuAdeV9s')
-    local Check2 = eq(syn.crypt.custom.decrypt("aes-gcm", "7WmiFMIr13YThMgdOl2ABZGjs1nNcuAdeV9s", "$nLliCMdi7gcynsFCK9u0aVNdtkNIiZG", "Agd13KuKIL2$"), 'riprippixel')
-    return not eq(eq(Check1, Check2), false)
-end
-
-local uuid = HttpService:GenerateGUID(false)
-local ToSend = Encrypt(ToJson({
-    ['key'] = PixelsKey or '',
-    ['uuid'] = uuid
-}, true), true)
-local req = sreq('https://riprippixel.xyz/whitelist', 'POST', ToSend)
-local datares, data = pcall(function() return ToJson(Encrypt(req['Body'], false), false) end)
-
-if not IntegrityCheck() or not datares then
-    KickPlayer('no no no')
-end
-
-local returnuuid = req['Cookies']['UUID']
-if data['blacklisted'] then
-    KickPlayer(data['blacklisted'])
-end
-local whitelisted
-if data['success'] == eq(data['uuid'], uuid) == eq(returnuuid, uuid) == eq(req['StatusMessage'], 'OK') == eq(req['Success'], true) == eq(req['StatusCode'], 200) then
-    whitelisted = true
-else
-	whitelisted = false
-end
-
-print('Whitelisted:', whitelisted)
-
-if not whitelisted then KickPlayer(data['message'])end
-
-
-------------------------------------------
+--print('PixelHub UI v1 - riprippixel#6969')
 
 local library = {}
 
 function library.new(theme)
-	
+
 	theme = theme and theme or {
 		BackgroundColor = Color3.fromRGB(30, 30, 30),
 		MainColor = Color3.fromRGB(66, 66, 66),
@@ -74,7 +11,7 @@ function library.new(theme)
 		TextColor = Color3.fromRGB(255,255,255),
 		SelectedTextColor = Color3.fromRGB(0, 255, 0)
 	}
-	
+
 	local ColorThemes = {
 		BackgroundColor = {},
 		MainColor = {},
@@ -87,12 +24,12 @@ function library.new(theme)
 	local player = game:GetService('Players').LocalPlayer
 	local mouse = player:GetMouse()
 	local Camera = game:GetService('Workspace').Camera
-	
+
 	local TextSize = 17
 
 	local uuid = game:GetService('HttpService'):GenerateGUID()
 
-	local HubName = 'PixelHub-'..uuid
+	local HubName = tostring('PixelHub-'..uuid)
 
 	local MouseScroll = {
 		['Debounce'] = false,
@@ -196,7 +133,6 @@ function library.new(theme)
 	function pages:AddPage(PageTitle)
         PageTitle = PageTitle or 'Page'
 		local Page = Instance.new("Frame")
-		--local PageCorner = Instance.new("UICorner")
 		local PageListLayout = Instance.new("UIListLayout")
 		local Title = Instance.new("TextLabel")
 		local TitleBar = Instance.new("ImageLabel")
@@ -204,7 +140,7 @@ function library.new(theme)
 		local ActiveFrame = Instance.new("BoolValue")
 		local PagePadding = Instance.new("UIPadding")
 
-		pagenumber += 1
+		pagenumber = pagenumber + 1
 
 		FrameNumber.Name = "FrameNumber"
 		FrameNumber.Parent = Page
@@ -230,10 +166,6 @@ function library.new(theme)
 		Page.BorderSizePixel = 0
 		Page.Position = UDim2.new(0.5, 0, newpagepos, 0)
 		Page.Size = UDim2.new(0, 200, 0, 500)
-
-		--PageCorner.CornerRadius = UDim.new(0, 10)
-		--PageCorner.Name = "PageCorner"
-		--PageCorner.Parent = Page
 
 		PageListLayout.Name = "PageListLayout"
 		PageListLayout.Parent = Page
@@ -295,7 +227,7 @@ function library.new(theme)
 			SectionList.Padding = UDim.new(0, 5)
 
 			SectionList:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
-				local NewSize = SectionList.AbsoluteContentSize  
+				local NewSize = SectionList.AbsoluteContentSize
 				local OldSize = Section.Size
 				Section.Size = UDim2.new(OldSize.X.Scale,0,0,NewSize.Y)
 			end)
@@ -458,9 +390,9 @@ function library.new(theme)
 				KeybindPadding.PaddingLeft = UDim.new(0, 5)
 				KeybindPadding.PaddingRight = UDim.new(0, 5)
 				KeybindPadding.PaddingTop = UDim.new(0, 5)
-				
+
 				local Listening = false
-				
+
 				KeybindBox.Focused:Connect(function()
 					Listening = true
 				end)
@@ -469,7 +401,7 @@ function library.new(theme)
 					KeybindBox.Text = tostring(keybinded):split('.')[3]
 					
 				end)
-				
+
 				game:GetService('UserInputService').InputBegan:Connect(function(input)
 					if Listening and input.UserInputType == Enum.UserInputType.Keyboard then
 						keybinded = input.KeyCode
@@ -549,7 +481,9 @@ function library.new(theme)
 				end)
 			end
 
-			function elements:NewToggle(ToggleTitle, callback)
+			function elements:NewToggle(ToggleTitle, callback, defaulttog)
+				defaulttog = defaulttog or false
+				local update = {}
 				local ToggleFrame = Instance.new("Frame")
 				local ToggleLabel = Instance.new("TextLabel")
 				local TogglePadding = Instance.new("UIPadding")
@@ -666,10 +600,20 @@ function library.new(theme)
 
 				ToggleButton.MouseButton1Click:Connect(SwitchToggle)
 
+				if defaulttog then SwitchToggle() end
+
+				function update:UpdateToggle(tog)
+					toggled = not tog
+					SwitchToggle()
+				end
+
+				return update
+
 			end
 
 			function elements:NewSlider(SliderTitle, callback, MinNum, MaxNum, DefNum)
                 local update = {}
+				local latestnum = 0
 				SliderTitle = SliderTitle or 'Slider'
 				callback = callback or function()end
 				MinNum = MinNum or 0
@@ -813,8 +757,7 @@ function library.new(theme)
 					end
 				end)
 
-
-				SliderNumber:GetPropertyChangedSignal("Text"):Connect(function()
+				local function UpdateText()
 					local input = SliderNumber.Text
 					if input == '' then return end
 					local num = tonumber(input)
@@ -822,24 +765,35 @@ function library.new(theme)
 					if num > MaxNum then
 						num = MaxNum
 						SliderNumber.Text = MaxNum
+						Resize(MaxNum)
 					elseif num < MinNum then
 						num = MinNum
 						SliderNumber.Text = MinNum
+						Resize(MinNum)
 					else
 						Resize(num)
 					end
 					if not exists() then return end
+					latestnum = num
 					callback(num)
+				end
+
+
+				SliderNumber:GetPropertyChangedSignal("Text"):Connect(function()
+					UpdateText()
 				end)
 				Resize(DefNum)
 
                 function update:UpdateSlider(SliderValue)
-                    SliderNumber.Text = SliderValue
-                    Resize(SliderValue)
-                    callback(SliderValue)
+					SliderNumber.Text = tostring(SliderValue)
+                    UpdateText()
                 end
+				function update:UpdateMaxSlider(SliderValue)
+					MaxNum = SliderValue
+					SliderNumber.Text = tostring(latestnum)
+					UpdateText()
+				end
                 return update
-
 			end
 
 			function elements:NewDropdown(DropdownTitle, callback, Options, ResetText)
@@ -936,7 +890,7 @@ function library.new(theme)
 				local function DropTween(boo)
 					ResizeCanvas()
 					local NewCanvasSize = UIListLayout.AbsoluteContentSize
-					local dropsize = NewCanvasSize.Y >= 90 and DropdownSize * 30 or NewCanvasSize.Y
+					local dropsize = NewCanvasSize.Y >= DropdownSize * 30 and DropdownSize * 30 or NewCanvasSize.Y
 					local arrowshow = boo and -90 or 0
 					local dropshowval = boo and dropsize or 0
 					local tweeninfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
@@ -1124,7 +1078,7 @@ function library.new(theme)
 				local function DropTween(boo)
 					ResizeCanvas()
 					local NewCanvasSize = UIListLayout.AbsoluteContentSize
-					local dropsize = NewCanvasSize.Y >= 90 and DropdownSize * 30 or NewCanvasSize.Y
+					local dropsize = NewCanvasSize.Y >= DropdownSize * 30 and DropdownSize * 30 or NewCanvasSize.Y
 					local arrowshow = boo and -90 or 0
 					local dropshowval = boo and dropsize or 0
 					local tweeninfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
